@@ -1,7 +1,9 @@
 package todo
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -17,7 +19,7 @@ type item struct {
 // It provide various method for creating and managing todos.
 type TodoList []item
 
-// Add is a method that add a new todo item to the todo list.
+// Add a new todo item to the todo list.
 func (t *TodoList) Add(task string) {
 	todoItem := item{
 		Task:      task,
@@ -28,10 +30,11 @@ func (t *TodoList) Add(task string) {
 	*t = append(*t, todoItem)
 }
 
-// Complete is a method that marks a todo item as completed
+// Complete marks a todo item as completed
 // by setting Done = true and CompletedTime to current time.
 func (t *TodoList) Complete(i int) error {
 	todoSlice := *t
+
 	if i <= 0 || i > len(todoSlice) {
 		return fmt.Errorf("item %d does not exist", i)
 	}
@@ -41,4 +44,29 @@ func (t *TodoList) Complete(i int) error {
 	todoSlice[i-1].CompletedAt = time.Now()
 
 	return nil
+}
+
+// Delete  a todo item from the list.
+func (t *TodoList) Delete(i int) error {
+	todoSlice := *t
+
+	if i <= 0 || i > len(todoSlice) {
+		return fmt.Errorf("item %d does not exist", i)
+	}
+
+	// Adjusting the index for 0 based index.
+	*t = append(todoSlice[:i-1], todoSlice[i:]...)
+
+	return nil
+}
+
+// Save encode the TodoList as JSON and saves it to a
+// disk using the provided filename.
+func (t *TodoList) Save(filename string) error {
+	js, err := json.Marshal(t)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(filename, js, 0644)
 }
