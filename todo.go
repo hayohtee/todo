@@ -64,7 +64,7 @@ func (t *TodoList) Delete(i int) error {
 // Save encode the TodoList as JSON and saves it to a
 // disk using the provided filename.
 func (t *TodoList) Save(filename string) error {
-	js, err := json.Marshal(t)
+	js, err := json.MarshalIndent(t, "", "\t")
 	if err != nil {
 		return err
 	}
