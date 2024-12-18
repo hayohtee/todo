@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/hayohtee/todo"
@@ -24,7 +28,7 @@ func main() {
 		todoFileName = os.Getenv("TODO_FILENAME")
 	}
 
-	task := flag.String("task", "", "Task to be included in the todo list")
+	add := flag.Bool("add", false, "Add task to the Todo list")
 	list := flag.Bool("list", false, "List all tasks")
 	complete := flag.Int("complete", 0, "Item to be completed")
 	flag.Parse()
@@ -40,10 +44,15 @@ func main() {
 	// Decide what to do based on the number of arguments provided
 	switch {
 	// Add a new todo item
-	case *task != "":
-		todoList.Add(*task)
+	case *add:
+		t, err := getTask(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 
-		// Save the new list
+		todoList.Add(t)
+
 		if err := todoList.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -72,4 +81,24 @@ func main() {
 		fmt.Fprintln(os.Stderr, "invalid option")
 		os.Exit(1)
 	}
+}
+
+// getTask verify if any arguments were provided and then concatenate them into a
+// string and return. If it doesn't, it default to reading from standard input (STDIN).
+func getTask(r io.Reader, args ...string) (string, error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	s := bufio.NewScanner(r)
+	s.Scan()
+	if err := s.Err(); err != nil {
+		return "", err
+	}
+
+	if len(s.Text()) == 0 {
+		return "", errors.New("task cannot be blank")
+	}
+
+	return s.Text(), nil
 }
