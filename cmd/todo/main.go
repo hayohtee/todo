@@ -34,6 +34,16 @@ func main() {
 
 	// Decide what to do based on the number of arguments provided
 	switch {
+	// Add a new todo item
+	case *task != "":
+		todoList.Add(*task)
+
+		// Save the new list
+		if err := todoList.Save(todoFileName); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		
 	// List current todo items.
 	case *list:
 		fmt.Print(todoList)
@@ -47,16 +57,6 @@ func main() {
 		}
 
 		// Save the new list.
-		if err := todoList.Save(todoFileName); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-
-	// Add a new todo item
-	case *task != "":
-		todoList.Add(*task)
-
-		// Save the new list
 		if err := todoList.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
