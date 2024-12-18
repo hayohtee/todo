@@ -91,3 +91,20 @@ func (t *TodoList) Get(filename string) error {
 
 	return json.Unmarshal(file, t)
 }
+
+// String return a formatted string representation of a todo list.
+func (t *TodoList) String() string {
+	formatted := ""
+
+	for index, value := range *t {
+		prefix := "   "
+		if value.Done {
+			prefix = "X  "
+		}
+
+		// Adjust the item number starting from 1 instead if 0
+		formatted += fmt.Sprintf("%s%d: %s\n", prefix, index + 1, value.Task)
+	}
+
+	return formatted
+}
