@@ -97,13 +97,13 @@ func (t *TodoList) String() string {
 	formatted := ""
 
 	for index, value := range *t {
-		prefix := "   "
+		prefix := " "
 		if value.Done {
-			prefix = "X  "
+			prefix = "X "
 		}
 
 		// Adjust the item number starting from 1 instead if 0
-		formatted += fmt.Sprintf("%s%d: %s\n", prefix, index + 1, value.Task)
+		formatted += fmt.Sprintf("%s%d: %s\n", prefix, index+1, value.Task)
 	}
 
 	return formatted
