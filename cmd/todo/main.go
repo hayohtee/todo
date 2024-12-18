@@ -9,7 +9,7 @@ import (
 	"github.com/hayohtee/todo"
 )
 
-const todoFileName = ".todo.json"
+var todoFileName = ".todo.json"
 
 func main() {
 	flag.Usage = func() {
@@ -17,6 +17,11 @@ func main() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Copyright %d\n", time.Now().Year())
 		fmt.Fprintln(flag.CommandLine.Output(), "Usage Information:")
 		flag.PrintDefaults()
+	}
+
+	// Check if the user defined the ENV VAR for a custom file name.
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFileName = os.Getenv("TODO_FILENAME")
 	}
 
 	task := flag.String("task", "", "Task to be included in the todo list")
@@ -43,7 +48,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		
+
 	// List current todo items.
 	case *list:
 		fmt.Print(todoList)
