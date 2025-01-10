@@ -1,6 +1,9 @@
 package todo
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // todo is a struct containing information about
 // a particular todo item.
@@ -24,4 +27,22 @@ func (t *TodoList) Add(task string) {
 	}
 
 	*t = append(*t, item)
+}
+
+// Complete marks a todo item as completed.
+//
+// It sets Done field to true and CompletedAt field to the current time
+func (t *TodoList) Complete(pos int) error {
+	todoList := *t
+	
+	// Check if pos is within the range of todo list.
+	if pos <= 0 || pos >= len(todoList) {
+		return fmt.Errorf("item %d does not exist", pos)
+	}
+
+	// Adjusting for 0-based index.
+	todoList[pos - 1].Done = true
+	todoList[pos - 1].CompletedAt = time.Now()
+
+	return nil
 }
