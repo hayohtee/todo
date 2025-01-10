@@ -2,6 +2,7 @@ package todo
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -72,4 +73,25 @@ func (t *TodoList) Save(filename string) error {
 		return err
 	}
 	return os.WriteFile(filename, js, 0644)
+}
+
+
+// Get opens the provided file name, decodes the JSON data
+// and parses it into the TodoList.
+func (t *TodoList) Get(filename string) error {
+	file, err := os.ReadFile(filename)
+	if err != nil {
+		switch {
+		case errors.Is(err, os.ErrNotExist):
+			return nil
+		default:
+			return err
+		}
+	}
+	
+	if len(file) == 0 {
+		return nil
+	}
+
+	return json.Unmarshal(file, t)
 }
