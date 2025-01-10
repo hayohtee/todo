@@ -1,7 +1,9 @@
 package todo
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -60,4 +62,14 @@ func (t *TodoList) Delete(pos int) error {
 	// Adjusting for 0-based index.
 	*t = append(todoList[:pos-1], todoList[:pos]...)
 	return nil
+}
+
+// Save encodes the TodoList as JSON and then saves it
+// using the provided file name into the current working directory.
+func (t *TodoList) Save(filename string) error {
+	js, err := json.MarshalIndent(t, "", "\t")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filename, js, 0644)
 }
