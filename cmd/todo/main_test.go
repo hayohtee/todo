@@ -8,5 +8,5 @@ type todo struct {
 	Task      string
 	Done      bool
 	CreatedAt time.Time
-	UpdatedAt time.Time
+	CompletedAt time.Time
 }
