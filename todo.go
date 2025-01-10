@@ -16,12 +16,12 @@ type todo struct {
 type TodoList []todo
 
 // Add creates a new todo item and appends it to the list.
-func (l *TodoList) Add(task string) {
-	t := todo{
+func (t *TodoList) Add(task string) {
+	item := todo{
 		Task:      task,
 		CreatedAt: time.Now(),
 		Done:      false,
 	}
 
-	*l = append(*l, t)
+	*t = append(*t, item)
 }
