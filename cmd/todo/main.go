@@ -10,3 +10,7 @@ type todo struct {
 	CreatedAt time.Time
 	CompletedAt time.Time
 }
+
+// TodoList is a custom type with the underlying []todo data type.
+// It contains various methods for creating and managing todos.
+type TodoList []todo
