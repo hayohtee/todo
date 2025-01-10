@@ -61,7 +61,7 @@ func (t *TodoList) Delete(pos int) error {
 	}
 
 	// Adjusting for 0-based index.
-	*t = append(todoList[:pos-1], todoList[:pos]...)
+	*t = append(todoList[:pos-1], todoList[pos:]...)
 	return nil
 }
 
