@@ -26,7 +26,7 @@ func main() {
 	default:
 		item := strings.Join(os.Args[1:], " ")
 		todoList.Add(item)
-		if err := todoList.Save(item); err != nil {
+		if err := todoList.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
