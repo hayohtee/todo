@@ -1,21 +1,37 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/hayohtee/todo"
 )
 
-const todoFileName = ".todo.json"
+var todoFileName = ".todo.json"
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "%s tool. Developed by Olamilekan Akintilebo\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "Copyright %d\n", time.Now().Year())
+		fmt.Fprintln(flag.CommandLine.Output(), "Usage information:")
+		flag.PrintDefaults()
+	}
+
 	// Parsing commandline flags
-	task := flag.String("task", "", "Task to be included in the todo list")
+	add := flag.Bool("add", false, "TAdd task to the todo list")
 	list := flag.Bool("list", false, "List all tasks")
 	complete := flag.Int("complete", 0, "Item to be completed")
 	flag.Parse()
+
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFileName = os.Getenv("TODO_FILENAME")
+	}
 
 	var todoList todo.TodoList
 
@@ -27,11 +43,7 @@ func main() {
 	switch {
 	case *list:
 		// List current to-do items.
-		for _, item := range todoList {
-			if !item.Done {
-				fmt.Println(item.Task)
-			}
-		}
+		fmt.Println(&todoList)
 	case *complete > 0:
 		// Complete the given task.
 		if err := todoList.Complete(*complete); err != nil {
@@ -44,11 +56,16 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-	case *task != "":
-		// Add new task
-		todoList.Add(*task)
+	case *add:
+		// Read the value of new task either from STDIN or command-line arguments.
+		task, err := getTask(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		todoList.Add(task)
 
-		// Save the new todo list.
+		// Save the new list.
 		if err := todoList.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -57,4 +74,24 @@ func main() {
 		fmt.Fprintln(os.Stderr, "invalid option")
 		os.Exit(1)
 	}
+}
+
+// getTask decides where to get the description for a new task
+// from (arguments or STDIN).
+func getTask(r io.Reader, args ...string) (string, error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	s := bufio.NewScanner(r)
+	s.Scan()
+	if err := s.Err(); err != nil {
+		return "", err
+	}
+
+	if len(s.Text()) == 0 {
+		return "", errors.New("task cannot be blank")
+	}
+
+	return s.Text(), nil
 }
