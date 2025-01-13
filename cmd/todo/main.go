@@ -53,5 +53,8 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+	default:
+		fmt.Fprintln(os.Stderr, "invalid option")
+		os.Exit(1)
 	}
 }
