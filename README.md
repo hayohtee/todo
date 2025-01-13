@@ -30,7 +30,7 @@ using the JSON format.
    ```bash
    ./todo -add The name of the task you wanted to add
    ```
-   Here is an example of using STDIN\
+   Here is an example of using STDIN
    ```bash
    echo "The name of the task you wanted to add" | ./todo -add
    ```
@@ -41,7 +41,7 @@ using the JSON format.
 3. Mark a task as completed
    To mark a task as completed, you supply the position of the task in the list\
    *Note* positon starts from 1\
-   Here is an example of completing task 1\
+   Here is an example of completing task 1
    ```bash
    ./todo -complete 1
    ```
