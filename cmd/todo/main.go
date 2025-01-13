@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/hayohtee/todo"
@@ -65,4 +69,24 @@ func main() {
 		fmt.Fprintln(os.Stderr, "invalid option")
 		os.Exit(1)
 	}
+}
+
+// getTask decides where to get the description for a new task
+// from (arguments or STDIN).
+func getTask(r io.Reader, args ...string) (string,  error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	s := bufio.NewScanner(r)
+	s.Scan()
+	if err := s.Err(); err != nil {
+		return "", err
+	}
+
+	if len(s.Text()) == 0 {
+		return "", errors.New("task cannot be blank")
+	}
+
+	return s.Text(), nil
 }
