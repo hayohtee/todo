@@ -56,7 +56,20 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-	
+	case *add:
+		// Read the value of new task either from STDIN or command-line arguments.
+		task, err := getTask(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		todoList.Add(task)
+
+		// Save the new list.
+		if err := todoList.Save(todoFileName); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	default:
 		fmt.Fprintln(os.Stderr, "invalid option")
 		os.Exit(1)
@@ -65,7 +78,7 @@ func main() {
 
 // getTask decides where to get the description for a new task
 // from (arguments or STDIN).
-func getTask(r io.Reader, args ...string) (string,  error) {
+func getTask(r io.Reader, args ...string) (string, error) {
 	if len(args) > 0 {
 		return strings.Join(args, " "), nil
 	}
