@@ -24,4 +24,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	switch {
+	case *list:
+		for _, item := range todoList {
+			if !item.Done {
+				fmt.Println(item)
+			}
+		}
+	}
 }
