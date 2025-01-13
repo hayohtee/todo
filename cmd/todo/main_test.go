@@ -2,6 +2,7 @@ package main_test
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -47,8 +48,23 @@ func TestTodoCLI(t *testing.T) {
 
 	cmdPath := filepath.Join(dir, binName)
 
-	t.Run("Add New Task", func(t *testing.T) {
-		cmd := exec.Command(cmdPath, "-task", task)
+	t.Run("Add New Task From Arguments", func(t *testing.T) {
+		cmd := exec.Command(cmdPath, "-add", task)
+		if err := cmd.Run(); err != nil {
+			t.Fatal(err)
+		}
+	})
+
+	task2 := "test task number 2"
+	t.Run("Add New Task From STDIN", func(t *testing.T) {
+		cmd := exec.Command(cmdPath, "-add")
+		cmdStdIn, err := cmd.StdinPipe()
+		if err != nil {
+			t.Fatal(err)
+		}
+		io.WriteString(cmdStdIn, task2)
+		cmdStdIn.Close()
+
 		if err := cmd.Run(); err != nil {
 			t.Fatal(err)
 		}
