@@ -29,7 +29,7 @@ func main() {
 		// List current to-do items.
 		for _, item := range todoList {
 			if !item.Done {
-				fmt.Println(item)
+				fmt.Println(item.Task)
 			}
 		}
 	case *complete > 0:
