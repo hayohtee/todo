@@ -24,7 +24,7 @@ func main() {
 	}
 
 	// Parsing commandline flags
-	task := flag.String("task", "", "Task to be included in the todo list")
+	add := flag.Bool("add", false, "TAdd task to the todo list")
 	list := flag.Bool("list", false, "List all tasks")
 	complete := flag.Int("complete", 0, "Item to be completed")
 	flag.Parse()
@@ -56,15 +56,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-	case *task != "":
-		// Add new task
-		todoList.Add(*task)
-
-		// Save the new todo list.
-		if err := todoList.Save(todoFileName); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
+	
 	default:
 		fmt.Fprintln(os.Stderr, "invalid option")
 		os.Exit(1)
