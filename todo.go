@@ -75,7 +75,6 @@ func (t *TodoList) Save(filename string) error {
 	return os.WriteFile(filename, js, 0644)
 }
 
-
 // Get opens the provided file name, decodes the JSON data
 // and parses it into the TodoList.
 func (t *TodoList) Get(filename string) error {
@@ -88,10 +87,27 @@ func (t *TodoList) Get(filename string) error {
 			return err
 		}
 	}
-	
+
 	if len(file) == 0 {
 		return nil
 	}
 
 	return json.Unmarshal(file, t)
+}
+
+// String prints out a formatted list of to-do items.
+//
+// It implements the fmt.Stringer interface.
+func (t *TodoList) String() string {
+	formatted := ""
+
+	for k, t := range *t {
+		prefix := "   "
+		if t.Done {
+			prefix = "X  "
+		}
+		formatted += fmt.Sprintf("%s%d: %s\n", prefix, k+1, t.Task)
+	}
+
+	return formatted
 }
