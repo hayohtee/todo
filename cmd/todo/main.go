@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/hayohtee/todo"
 )
@@ -11,6 +11,12 @@ import (
 const todoFileName = ".todo.json"
 
 func main() {
+	// Parsing commandline flags
+	task := flag.String("task", "", "Task to be included in the todo list")
+	list := flag.Bool("list", false, "List all tasks")
+	complete := flag.Int("complete", 0, "Item to be completed")
+	flag.Parse()
+
 	var todoList todo.TodoList
 
 	if err := todoList.Get(todoFileName); err != nil {
@@ -18,17 +24,4 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch {
-	case len(os.Args) == 1:
-		for _, item := range todoList {
-			fmt.Println(item.Task)
-		}
-	default:
-		item := strings.Join(os.Args[1:], " ")
-		todoList.Add(item)
-		if err := todoList.Save(todoFileName); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-	}
 }
