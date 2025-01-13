@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/hayohtee/todo"
 )
@@ -11,6 +12,13 @@ import (
 const todoFileName = ".todo.json"
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "%s tool. Developed by Olamilekan Akintilebo\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "Copyright %d\n", time.Now().Year())
+		fmt.Fprintln(flag.CommandLine.Output(), "Usage information:")
+		flag.PrintDefaults()
+	}
+
 	// Parsing commandline flags
 	task := flag.String("task", "", "Task to be included in the todo list")
 	list := flag.Bool("list", false, "List all tasks")
