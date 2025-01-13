@@ -26,10 +26,23 @@ func main() {
 
 	switch {
 	case *list:
+		// List current to-do items.
 		for _, item := range todoList {
 			if !item.Done {
 				fmt.Println(item)
 			}
+		}
+	case *complete > 0:
+		// Complete the given task.
+		if err := todoList.Complete(*complete); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+
+		// Save the new todo list.
+		if err := todoList.Save(todoFileName); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 	}
 }
