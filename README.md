@@ -8,6 +8,7 @@ using the JSON format.
 - Save the list of "to-do" item to the current working directory in JSON format.
 - Marking a "to-do" item as completed.
 - Listing "to-do" items.
+- Deleting a "to-do" item.
 
 ## Building from source
 1. Clone the repository
@@ -48,4 +49,10 @@ using the JSON format.
 4. Show all available options
    ```bash
    ./todo -h
+   ```
+5. Delete a task
+   To delete a task, you supply the position of the task in the list to -del flag\
+   Here is an example of deleting task 1
+   ```bash
+   ./todo -del 1
    ```
