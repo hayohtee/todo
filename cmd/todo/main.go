@@ -26,6 +26,7 @@ func main() {
 	// Parsing commandline flags
 	add := flag.Bool("add", false, "TAdd task to the todo list")
 	list := flag.Bool("list", false, "List all tasks")
+	del := flag.Int("del", 0, "Delete a todo item from the list")
 	complete := flag.Int("complete", 0, "Item to be completed")
 	flag.Parse()
 
@@ -66,6 +67,18 @@ func main() {
 		todoList.Add(task)
 
 		// Save the new list.
+		if err := todoList.Save(todoFileName); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	case *del > 0:
+		// Delete a todo based on the provided position.
+		if err := todoList.Delete(*del); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+
+		// Save the new todo list.
 		if err := todoList.Save(todoFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
