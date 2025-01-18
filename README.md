@@ -25,7 +25,7 @@ using the JSON format.
    ```
 
 ## Usage
-1. Add new task
+1. Add new task\
    You can add new task either by using command-line arguments or from STDIN\
    Here is an example of using command-line arguments:\
    ```bash
@@ -39,7 +39,7 @@ using the JSON format.
    ```bash
    ./todo -list
    ```
-3. Mark a task as completed
+3. Mark a task as completed\
    To mark a task as completed, you supply the position of the task in the list\
    *Note* positon starts from 1\
    Here is an example of completing task 1
@@ -50,7 +50,7 @@ using the JSON format.
    ```bash
    ./todo -h
    ```
-5. Delete a task
+5. Delete a task\
    To delete a task, you supply the position of the task in the list to -del flag\
    Here is an example of deleting task 1
    ```bash
